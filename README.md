@@ -465,7 +465,45 @@ module.exports = {
 
 # 环境变量和模式
 
+```sh
+# 在package.json文件里面 写上对应的脚本
+"build:pre": "vue-tsc --noEmit && vite build --mode staging",
+"build:pro": "vue-tsc --noEmit && vite build --mode production",
+```
+
 # 调试功能与配置文件
+
+```sh
+# .vscode文件里面 .launch.json文件 settings.json
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true
+  },
+  "stylelint.validate": ["css", "less", "scss", "vue"],
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[ts]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[less]": {
+    // "editor.defaultFormatter": "stylelint.vscode-stylelint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
+# 移动端调试
+pnpm i vconsole
+pnpm i vite-plugin-vconsole -D
+```
+
+# vue-router pinia
 
 # 最终项目结构：
 

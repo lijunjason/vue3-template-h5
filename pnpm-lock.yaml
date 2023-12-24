@@ -20,18 +20,22 @@ specifiers:
   postcss: ^8.4.32
   postcss-html: ^1.5.0
   prettier: ^3.1.1
+  sass: ^1.69.5
   stylelint: ^16.0.2
   stylelint-config-recommended-vue: ^1.5.0
   stylelint-config-standard: ^35.0.0
   stylelint-config-standard-scss: ^12.0.0
   typescript: ^5.3.3
+  vconsole: ^3.15.1
   vite: ^5.0.8
   vite-plugin-eslint: ^1.8.1
   vite-plugin-stylelint: ^5.3.1
+  vite-plugin-vconsole: ^2.0.1
   vue: ^3.3.11
   vue-tsc: ^1.8.25
 
 dependencies:
+  vconsole: 3.15.1
   vue: 3.3.13_typescript@5.3.3
 
 devDependencies:
@@ -54,14 +58,16 @@ devDependencies:
   postcss: 8.4.32
   postcss-html: 1.5.0
   prettier: 3.1.1
+  sass: 1.69.5
   stylelint: 16.0.2_typescript@5.3.3
   stylelint-config-recommended-vue: 1.5.0_pi7aru33xi5gtsw6tmxxyb6zzm
   stylelint-config-standard: 35.0.0_stylelint@16.0.2
   stylelint-config-standard-scss: 12.0.0_ci5nlbejauo4mqwq7zgfuq7h5y
   typescript: 5.3.3
-  vite: 5.0.10_@types+node@20.10.5
+  vite: 5.0.10_ordawu77b2uoaf4b5eovt4e6tq
   vite-plugin-eslint: 1.8.1_eslint@8.56.0+vite@5.0.10
   vite-plugin-stylelint: 5.3.1_t374t4g7m3x4rj5g3hdrc3lvyi
+  vite-plugin-vconsole: 2.0.1
   vue-tsc: 1.8.26_typescript@5.3.3
 
 packages:
@@ -102,6 +108,13 @@ packages:
     hasBin: true
     dependencies:
       '@babel/types': 7.23.6
+
+  /@babel/runtime/7.23.6:
+    resolution: {integrity: sha512-zHd0eUrf5GZoOWVCXp6koAKQTfZV07eit6bGPmJgnZdnSAvvZee6zniW2XMF7Cmc4ISOOnPy3QaSiIJGJkVEDQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.1
+    dev: false
 
   /@babel/types/7.23.6:
     resolution: {integrity: sha512-+uarb83brBzPKN38NX1MkB6vb6+mwvR6amUulqAE7ccQw1pEl+bCia9TbdG1lsnFP7lZySvUn37CHyXQdfTwzg==}
@@ -925,7 +938,7 @@ packages:
       vite: ^4.0.0 || ^5.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 5.0.10_@types+node@20.10.5
+      vite: 5.0.10_ordawu77b2uoaf4b5eovt4e6tq
       vue: 3.3.13_typescript@5.3.3
     dev: true
 
@@ -1436,6 +1449,16 @@ packages:
       meow: 12.1.1
       split2: 4.2.0
     dev: true
+
+  /copy-text-to-clipboard/3.2.0:
+    resolution: {integrity: sha512-RnJFp1XR/LOBDckxTib5Qjr/PMfkatD0MUCQgdpqS8MdKiNUzBjAQBEN6oUy+jW7LI93BBG3DtMB2KOOKpGs2Q==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /core-js/3.34.0:
+    resolution: {integrity: sha512-aDdvlDder8QmY91H88GzNi9EtQi2TjvQhpCX6B1v/dAZHU1AuLgHvRh54RiOerpEhEW46Tkf+vgAViB/CWC0ag==}
+    requiresBuild: true
+    dev: false
 
   /cosmiconfig-typescript-loader/5.0.0_zvzcglrrlvti7bzocevupcnhze:
     resolution: {integrity: sha512-+8cK7jRAReYkMwMiG+bxhcNKiHJDM6bR9FD/nGBXOWdMLuYawjF5cGrtLilJ+LGd3ZjCXnJjR5DkfWPoIVlqJA==}
@@ -2469,6 +2492,10 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
+  /immutable/4.3.4:
+    resolution: {integrity: sha512-fsXeu4J4i6WNWSikpI88v/PcVflZz+6kMhUfIwc5SY+poQRPnaf5V7qds6SUyUN3cVxEzuCab7QIoLOQ+DQ1wA==}
+    dev: true
+
   /import-fresh/3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -3040,6 +3067,10 @@ packages:
     resolution: {integrity: sha512-ckmWDJjphvd/FvZawgygcUeQCxzvohjFO5RxTjj4eq8kw359gFF3E1brjfI+viLMxss5JrHTDRHZvu2/tuy0Qg==}
     dev: true
 
+  /mutation-observer/1.0.3:
+    resolution: {integrity: sha512-M/O/4rF2h776hV7qGMZUH3utZLO/jK7p8rnNgGkjKUw8zCGjRQPxB8z6+5l8+VjRUQ3dNYu4vjqXYLr+U8ZVNA==}
+    dev: false
+
   /nanoid/3.3.7:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -3427,6 +3458,10 @@ packages:
       strip-indent: 3.0.0
     dev: true
 
+  /regenerator-runtime/0.14.1:
+    resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
+    dev: false
+
   /regexp.prototype.flags/1.5.1:
     resolution: {integrity: sha512-sy6TXMN+hnP/wMy+ISxg3krXx7BAtWVO4UouuCN/ziM9UEne0euamVNafDfvC83bRNr95y0V5iijeDQFUNpvrg==}
     engines: {node: '>= 0.4'}
@@ -3558,6 +3593,16 @@ packages:
       call-bind: 1.0.5
       get-intrinsic: 1.2.2
       is-regex: 1.1.4
+    dev: true
+
+  /sass/1.69.5:
+    resolution: {integrity: sha512-qg2+UCJibLr2LCVOt3OlPhr/dqVHWOa9XtZf2OjbLs/T4VPSJ00udtgJxH3neXZm+QqX8B+3cU7RaLqp1iVfcQ==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+    dependencies:
+      chokidar: 3.5.3
+      immutable: 4.3.4
+      source-map-js: 1.0.2
     dev: true
 
   /semver/5.7.2:
@@ -4154,6 +4199,15 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
+  /vconsole/3.15.1:
+    resolution: {integrity: sha512-KH8XLdrq9T5YHJO/ixrjivHfmF2PC2CdVoK6RWZB4yftMykYIaXY1mxZYAic70vADM54kpMQF+dYmvl5NRNy1g==}
+    dependencies:
+      '@babel/runtime': 7.23.6
+      copy-text-to-clipboard: 3.2.0
+      core-js: 3.34.0
+      mutation-observer: 1.0.3
+    dev: false
+
   /vite-plugin-eslint/1.8.1_eslint@8.56.0+vite@5.0.10:
     resolution: {integrity: sha512-PqdMf3Y2fLO9FsNPmMX+//2BF5SF8nEWspZdgl4kSt7UvHDRHVVfHvxsD7ULYzZrJDGRxR81Nq7TOFgwMnUang==}
     peerDependencies:
@@ -4164,7 +4218,7 @@ packages:
       '@types/eslint': 8.56.0
       eslint: 8.56.0
       rollup: 2.79.1
-      vite: 5.0.10_@types+node@20.10.5
+      vite: 5.0.10_ordawu77b2uoaf4b5eovt4e6tq
     dev: true
 
   /vite-plugin-stylelint/5.3.1_t374t4g7m3x4rj5g3hdrc3lvyi:
@@ -4189,12 +4243,16 @@ packages:
       debug: 4.3.4
       postcss: 8.4.32
       stylelint: 16.0.2_typescript@5.3.3
-      vite: 5.0.10_@types+node@20.10.5
+      vite: 5.0.10_ordawu77b2uoaf4b5eovt4e6tq
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /vite/5.0.10_@types+node@20.10.5:
+  /vite-plugin-vconsole/2.0.1:
+    resolution: {integrity: sha512-9rrr4obWyAVtvvlDJH16es9vMY+BPq1lALCRfD2h9vakLaDZsR2csRlqvAMbPCZYglIqlIAUSke7O7LAJHTDgw==}
+    dev: true
+
+  /vite/5.0.10_ordawu77b2uoaf4b5eovt4e6tq:
     resolution: {integrity: sha512-2P8J7WWgmc355HUMlFrwofacvr98DAjoE52BfdbwQtyLH06XKwaL/FMnmKM2crF0iX4MpmMKoDlNCB1ok7zHCw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -4226,6 +4284,7 @@ packages:
       esbuild: 0.19.10
       postcss: 8.4.32
       rollup: 4.9.1
+      sass: 1.69.5
     optionalDependencies:
       fsevents: 2.3.3
     dev: true

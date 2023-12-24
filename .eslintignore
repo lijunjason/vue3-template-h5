@@ -41,3 +41,4 @@ dist-ssr
 *.sw?
 
 components.d.ts
+vite-env.d.ts
