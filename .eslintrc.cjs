@@ -1,59 +1,47 @@
+/**
+ * npx eslint --init // 自动生成配置文件并安装下面四个依赖
+ *
+ * npm i eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-vue -D // 手动创建文件
+ *
+ * eslint
+ * @typescript-eslint/parser // ESLint 默认使用的是 Espree 进行语法解析，所以无法对部分 typescript 语法进行解析，需要替换掉默认的解析器
+ * @typescript-eslint/eslint-plugin // 作为 eslint 默认规则的补充，提供了一些额外的适用于 ts 语法的规则
+ * eslint-plugin-vue // 让 eslint 识别 vue 文件
+ *
+ * 配置文件优先级：.eslintrc.js > .eslintrc.yaml > .eslintrc.yml > .eslintrc.json > .eslintrc > package.json。
+ */
+
 module.exports = {
-  // 环境 浏览器，最新es语法，node环境
+  root: true, // 停止向上查找父级目录中的配置文件
   env: {
     browser: true,
     es2021: true,
     node: true,
+    'vue/setup-compiler-macros': true,
   },
-  // 扩展的eslint规范语法，可以被继承的规则；字符串数组：每个配置继承它前面的配置
-  // 分别是 eslint-plugin-vue提供的
-  // eslint-config-airbnb-base 提供的
-  // eslint-config-prettier 提供的
-  // eslint-config- 前缀可以简写
-  // https://eslint.vuejs.org/rules/valid-v-if.html
-  extends: ['plugin:vue/vue3-strongly-recommended', 'airbnb-base', 'prettier'],
-  // ESLint 会对我们的代码进行校验，而 parser 的作用是将我们写的代码转换为 ESTree（AST），ESLint 会对 ESTree 进行校验
-  parser: 'vue-eslint-parser',
-  // 解析器的配置项
+  extends: [
+    'eslint:recommended',
+    'plugin:vue/vue3-essential',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+    // eslint-config-prettier 的缩写
+    'prettier',
+    // 解决使用自动导入api报错
+    './.eslintrc-auto-import.json',
+    // 单独解决使用vue api时报错
+    // 'vue-global-api',
+  ],
+  parser: 'vue-eslint-parser', // 指定要使用的解析器
+  // 给解析器传入一些其他的配置参数
   parserOptions: {
-    // es的版本号，或者年份都可以
-    ecmaVersion: 13,
+    ecmaVersion: 'latest', // 支持的es版本
     parser: '@typescript-eslint/parser',
-    // 源码类型 默认是script， es模块使用module
-    sourceType: 'module',
-    // 额外的语言类型
-    ecmaFeatures: {
-      tsx: true,
-      jsx: true,
-    },
+    sourceType: 'module', // 模块类型，默认为script，我们设置为module
   },
-  // 全局自定义的宏，这样再源文件中使用全局变量就不会报错或者警告
-  globals: {
-    defineProps: 'readonly',
-    defineEmits: 'readonly',
-    defineExpose: 'readonly',
-    withDefaults: 'readonly',
-  },
-  // 插件
-  // 前缀eslint-plugin- 可以省略
-  // vue 官方提供了一个 ESLint 插件 eslint-plugin-vue，它提供了 parser 和 rules。parser 为 vue-eslint-parser,放在上面的parser字段里， rules放在extends字段里，选择合适的规则
-  plugins: ['vue', '@typescript-eslint'],
-  settings: {
-    // 设置项目内的别名
-    'import/resolver': {
-      alias: {
-        map: [['@', './src']],
-      },
-    },
-    // 允许的扩展名
-    'import/extensions': ['.js', '.jsx', '.ts', '.tsx', '.mjs'],
-  },
-  // 自定义规则，覆盖上面extends继承的第三方库的规则，根据组内成员灵活定义
+  plugins: ['vue', '@typescript-eslint', 'prettier'], // eslint-plugin- 可以省略
   rules: {
-    'import/no-extraneous-dependencies': 0,
-    'no-param-reassign': 0,
-    'vue/multi-word-component-names': 0,
-    'vue/attribute-hyphenation': 0,
-    'vue/v-on-event-hyphenation': 0,
+    'vue/multi-word-component-names': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
 };

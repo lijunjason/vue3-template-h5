@@ -501,9 +501,94 @@ module.exports = {
 # 移动端调试
 pnpm i vconsole
 pnpm i vite-plugin-vconsole -D
+# vite.config.ts配置
+plugin: [
+  viteVConsole({
+    entry: pathResolve('src/main.ts'),
+    localEnabled: true,
+    enabled: env.VITE_BUILD_VCONSOLE === 'true',
+    config: {
+      maxLogNumber: 1000,
+      theme: 'dark',
+    },
+  }),
+]
 ```
 
-# vue-router pinia
+# vant4 移动端适配 自动导入 vue-router4 pinia
+
+```sh
+# vant 安装
+pnpm i vant
+# vant 按需引入
+pnpm i unplugin-vue-components -D
+# vite.config.ts配置
+import Components from 'unplugin-vue-components/vite';
+import { VantResolver } from 'unplugin-vue-components/resolvers';
+
+plugins: [
+  Components({
+    resolvers: [VantResolver()],
+  }),
+]
+
+#移动端适配rem方案
+pnpm i amfe-flexible
+pnpm i postcss-pxtorem -D
+pnpm i autoprefixer -D
+#新建文件postcss.config.cjs
+
+const autoprefixer = require('autoprefixer');
+const pxtorem = require('postcss-pxtorem');
+
+module.exports = {
+  plugins: [
+    autoprefixer(),
+    pxtorem({
+      rootValue({ file }) {
+        return file.indexOf('node_modules/vant') !== -1 ? 37.5 : 75;
+      },
+      unitPrecision: 5,
+      propList: ['*'],
+      selectorBlackList: ['.ignore', 'keep-px'],
+      minPixelValue: 1,
+      mediaQuery: false,
+    }),
+  ],
+};
+# 自动导入
+pnpm i unplugin-auto-import -D
+# vite.config.ts配置
+import AutoImport from 'unplugin-auto-import/vite';
+
+plugins: [
+  AutoImport({
+    imports: ['vue', 'vue-router'],
+    // 设置为在'src/'目录下生成解决ts报错，默认是当前目录('./'，即根目录)
+    dts: 'src/auto-import.d.ts',
+    // 自动生成'eslintrc-auto-import.json'文件，在'.eslintrc.cjs'的'extends'中引入解决报错
+    // 'vue-global-api'这个插件仅仅解决vue3 hook报错
+    eslintrc: {
+      enabled: true,
+    },
+  }),
+]
+# .eslintrc.cjs
+
+extends: [
+  // 解决使用自动导入api报错
+  './.eslintrc-auto-import.json',
+  // 单独解决使用vue api时报错
+  // 'vue-global-api',
+],
+
+#安装vue-router
+pnpm i vue-router@4
+
+#安装pinia
+pnpm i pinia
+
+```
 
 # 最终项目结构：
 

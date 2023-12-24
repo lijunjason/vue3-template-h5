@@ -27,11 +27,12 @@ import { ref } from 'vue';
 
 defineProps<{ msg: string }>();
 const count: any = ref(0);
+defineExpose({ count });
 </script>
 
 <style lang="scss" scoped>
 .read-the-docs {
   color: #ccc;
-  padding: #ccc;
+  padding: 100px;
 }
 </style>
