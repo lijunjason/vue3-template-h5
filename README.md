@@ -325,31 +325,47 @@ npm run prepare
 npx husky add .husky/pre-commit "npx lint-staged"
 # lint-staged 对add之后，暂存区里面的文件进行格式化修复等工作
 pnpm install lint-staged -D
-
-package.json文件中 添加
-  "lint-staged": {
-    "src/**/*.{js,vue}": [
-      "prettier --write",
-      "eslint --fix",
-      "git add"
-    ]
-  },
-
-或者放入脚本命令
+# package.json文件中 添加
 "lint-staged": {
     "*.{js,jsx,vue,ts,tsx}": [
       "npm run lint",
       "npm run prettier-format"
     ]
   }
-或者
-"*.{ts,js,vue}": [
-      "eslint --fix"
+# 安装commitlint
+pnpm install @commitlint/config-conventional @commitlint/cli -D
+# 添加到git钩子里
+npx husky add .husky/commit-msg  "npx --no -- commitlint --edit ${1}"
+# 新建commitlint.config.cjs
+module.exports = {
+  extends: ['@commitlint/config-conventional'],
+  rules: {
+    'type-enum': [
+      2,
+      'always',
+      [
+      	'build', // 编译相关的修改，例如发布版本、对项目构建或者依赖的改动
+        'feat', // 新功能（feature)
+        'fix', // 修复bug
+        'upd', // 更新某功能
+        'refactor', // 重构
+        'docs', // 文档（documentation）
+        'chore', // 构建过程或辅助工具的变动，比如增加依赖库等
+        'style', // 格式（不影响代码运行的变动）
+        'revert', // 撤销commit,回滚到上一个版本
+        'perf', // 性能优化
+        'test', // 测试（单元、集成测试）
+      ],
     ],
-    "*.{html,scss,css,vue}": [
-      "prettier --write",
-      "stylelint --fix"
-    ]
+    'type-case': [0],
+    'type-empty': [0],
+    'scope-empty': [0],
+    'scope-case': [0],
+    'subject-full-stop': [0, 'never'],
+    'subject-case': [0, 'never'],
+    'header-max-length': [0, 'always', 72],
+  },
+};
 ```
 
 # Stylelint 钩子
