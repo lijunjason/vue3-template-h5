@@ -587,6 +587,8 @@ pnpm i vue-router@4
 
 #安装pinia
 pnpm i pinia
+# 安装terser
+pnpm install terser --save-dev
 
 ```
 

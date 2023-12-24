@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { showLoadingToast, closeToast } from 'vant';
 
 export default function useLoading() {
