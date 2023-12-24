@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    // 指定es的目标版本
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    // "isolatedModules": true,
+    "module": "esnext",
+    // 决定如何处理模块
+    "moduleResolution": "node",
+    "strict": true,
+    "strictNullChecks": false,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    // 编译过程中需要引入的库文件的列表
+    "lib": ["esnext", "dom", "DOM.Iterable"],
+    // 默认所有可见的"@types"包会在编译过程中被包含进来
+    "types": ["vite/client"],
+    // 解析非相对模块名的基准目录
+    "baseUrl": ".",
+    // 模块名到基于 baseUrl的路径映射的列表
+    "paths": {
+      "@/*": ["src/*"],
+      "*.ts": ["*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+}
