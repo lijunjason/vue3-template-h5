@@ -29,8 +29,9 @@ defineProps<{ msg: string }>();
 const count: any = ref(0);
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .read-the-docs {
-  color: #888;
+  color: #ccc;
+  padding: #ccc;
 }
 </style>

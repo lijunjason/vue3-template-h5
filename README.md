@@ -1,7 +1,8 @@
 # vue3-template
 
 - VSCode、Node16+、
-- VSCode 插件：TypeScript Vue Plugin (Volar)、Vue Language Features (Volar)、Prettier - Code formatter、ESLint
+- VSCode 插件：TypeScript Vue Plugin (Volar)、Vue Language Features
+  (Volar)、Prettier - Code formatter、ESLint、Stylelint
 
 # 包管理工具安装 pnpm
 
@@ -267,13 +268,12 @@ components.d.ts
 "prettier-format": "prettier --config .prettierrc.cjs \"src/**/*.{vue,js,ts}\" --write",
 ```
 
-- tsconfig.json
-  ts 编译项目的根目录
-  各含义属性 -- https://www.typescriptlang.org/docs/handbook/compiler-options.html
+- tsconfig.json ts 编译项目的根目录各含义属性 --
+  https://www.typescriptlang.org/docs/handbook/compiler-options.html
   https://www.tslang.cn/docs/handbook/compiler-options.html
-  https://vitejs.bootcss.com/guide/features.html#typescript
-  Vite 使用 esbuild 将 TypeScript 转译到 JavaScript, 但不执行任何类型检查； vue-tsc比tsc速度快
-  三斜线引用告诉编译器在编译过程中要引入的额外的文件
+  https://vitejs.bootcss.com/guide/features.html#typescript Vite 使用 esbuild 将
+  TypeScript 转译到 JavaScript, 但不执行任何类型检查； vue-tsc比tsc速度快三斜线
+  引用告诉编译器在编译过程中要引入的额外的文件
 
 ```sh
 {
@@ -309,8 +309,11 @@ components.d.ts
 
 # Husk、lint-staged、commitlint 功能添加
 
-- husky: 是一个为 git 客户端增加 hook 的工具, 在一些git操作前 自动触发的函数；如果我们希望在检测错误的同时，自动修复 eslint 语法错误, 就可以通过后面钩子实现 typicode.github.io/husky/#/
-- lint-staged: 过滤出 Git 代码暂存区文件(被 git add 的文件)的工具, 将所有暂存文件的列表传递给任务
+- husky: 是一个为 git 客户端增加 hook 的工具, 在一些git操作前 自动触发的函数；如
+  果我们希望在检测错误的同时，自动修复 eslint 语法错误, 就可以通过后面钩子实现
+  typicode.github.io/husky/#/
+- lint-staged: 过滤出 Git 代码暂存区文件(被 git add 的文件)的工具, 将所有暂存文
+  件的列表传递给任务
 - commitlint: 是对我们git commit提交的注释进行 校验的工具
 
 ```sh
@@ -366,9 +369,99 @@ module.exports = {
     'header-max-length': [0, 'always', 72],
   },
 };
+#常用的git hooks
+#pre-commit  由 git commit 调用，在 commit 之前执行
+#commit-msg：由 git commit 或 git merge 调用 或者 --amend xxx
+#pre-merge-commit  由 git merge 调用，在 merge 之前执行
+#pre-push：被 git push 调用，在 git push 前执行，防止进行推送
 ```
 
 # Stylelint 钩子
+
+- Stylelint CSS 代码检查器（linter），帮助我们规避 CSS 代码中的错误并保持一致的
+  编码风格
+- 1.安装vscode插件 StyleLint插件
+- 2.修改vscode 设置 settings.json， 添加下面几行代码
+
+```sh
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": true
+  },
+  "stylelint.validate": ["css", "scss","less", "vue"],
+}
+# 安装项目需要的校验库, (常见的规则包)
+pnpm install --save-dev stylelint stylelint-config-standard
+# 根目录建立 .stylelintrc.cjs
+module.exports = {
+  extends: [
+    "stylelint-config-standard"
+  ],
+}
+# 执行
+npx stylelint "**/*.css"
+
+# 增加对vue里面的样式支持， (附带less和sass的支持)
+# 对less的支持
+pnpm install stylelint-less stylelint-config-recommended-less -D
+# 对sass的支持
+pnpm install stylelint-scss stylelint-config-recommended-scss postcss -D
+# 对vue里面样式的支持 (vue的样式需要依赖前面这个库)【本次用这个】
+pnpm install postcss-html stylelint-config-standard-scss stylelint-config-recommended-vue postcss -D
+# Vite 也同时提供了对 .scss, .sass, .less, .styl 和 .stylus 文件的内置支持, 不需要在安装特定插件和预处理器
+
+# 修改styellintrc
+ extends: [
+    "stylelint-config-standard",
+    "stylelint-config-recommended-less",
+    "stylelint-config-recommended-scss",
+    "stylelint-config-recommended-vue"
+  ]
+
+sass的extends
+"extends": [
+	"stylelint-config-standard-scss",
+	"stylelint-config-recommended-vue/scss"
+]，
+#  package.json文件添加
+"lint:css": "stylelint **/*.{html,vue,css,sass,scss,less} --fix",
+# 给vite添加插件
+pnpm install vite-plugin-stylelint -D
+# 修改vite.config.js
+import StylelintPlugin from 'vite-plugin-stylelint';
+plugins：[... StylelintPlugin({fix: true})]
+# 添加到 lint-stage里面， 在暂存区对文件样式进行格式化
+"lint-staged": {
+  "*.{js,jsx,vue,ts,tsx}": [
+    "npm run lint",
+    "npm run prettier-format"
+  ],
+  "*.{vue,less,css,sass}": [
+    "npm run lint:css"
+  ]
+}
+# 最后添加一个 .stylelintignore文件， 忽略哪些文件不检查 css，less，scss等
+/dist/*
+/public/*
+#  .stylelintrc.cjs 内部的其他配置
+module.exports = {
+  extends: ["stylelint-config-standard", "stylelint-config-recommended-vue"],
+  overrides: [
+    // 若项目中存在scss文件，添加以下配置
+    {
+      files: ["*.scss", "**/*.scss"],
+      customSyntax: "postcss-scss",
+      extends: ["stylelint-config-recommended-scss"],
+    },
+    // 若项目中存在less文件，添加以下配置
+    {
+      files: ["*.less", "**/*.less"],
+      customSyntax: "postcss-less",
+      extends: ["stylelint-config-recommended-less"],
+    },
+  ],
+}
+```
 
 # 环境变量和模式
 
