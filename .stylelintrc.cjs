@@ -10,4 +10,12 @@ module.exports = {
       extends: ['stylelint-config-recommended-scss'],
     },
   ],
+  rules: {
+    'selector-class-pattern': null,
+    'no-duplicate-selectors': null,
+    'no-duplicate-selectors': null,
+    'no-duplicate-selectors': null,
+    'scss/dollar-variable-pattern': null,
+    'media-feature-name-no-unknown': null,
+  },
 };

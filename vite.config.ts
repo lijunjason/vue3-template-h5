@@ -7,11 +7,11 @@ import { viteVConsole } from 'vite-plugin-vconsole';
 import Components from 'unplugin-vue-components/vite';
 import { VantResolver } from 'unplugin-vue-components/resolvers';
 import AutoImport from 'unplugin-auto-import/vite';
+import legacy from '@vitejs/plugin-legacy';
 
 const pathResolve = (dir: string) => resolve(__dirname, dir);
 // https://vitejs.dev/config/
 export default ({ mode }) => {
-  // eslint-disable-next-line no-undef
   const env: Partial<ImportMetaEnv> = loadEnv(mode, process.cwd());
   return defineConfig({
     define: {
@@ -20,11 +20,15 @@ export default ({ mode }) => {
     resolve: {
       alias: {
         '@': pathResolve('src'),
+        '@assets': pathResolve('src/assets'),
       },
     },
     plugins: [
       vue(),
       eslintPlugin(),
+      legacy({
+        targets: ['chrome < 60', 'edge < 15', 'Firefox < 59'],
+      }),
       StylelintPlugin({ fix: true }),
       viteVConsole({
         entry: pathResolve('src/main.ts'),
@@ -47,10 +51,8 @@ export default ({ mode }) => {
       }),
     ],
     build: {
-      outDir: 'dist', // 指定打包路径，默认为项目根目录下的 dist 目录
+      outDir: 'dist', // 指定输出路径
       sourcemap: env.VITE_BUILD_SOURCEMAP === 'true',
-      // minify默认esbuild，esbuild模式下terserOptions将失效
-      // vite3变化：Terser 现在是一个可选依赖，如果你使用的是 build.minify: 'terser'，你需要手动安装它 `npm add -D terser`
       minify: 'terser',
       terserOptions: {
         compress: {
@@ -59,18 +61,49 @@ export default ({ mode }) => {
           drop_debugger: true, // 去除 debugger
         },
       },
-      chunkSizeWarningLimit: 1500, // chunk 大小警告的限制（以 kbs 为单位）
+      cssCodeSplit: true, // 启用 CSS 代码拆分
+      emptyOutDir: true, // 构建时清空该目录
+      chunkSizeWarningLimit: 500, // chunk 大小警告的限制
+      rollupOptions: {
+        input: {
+          index: pathResolve('index.html'),
+        },
+        output: {
+          chunkFileNames: 'js/[name]-[hash].js',
+          entryFileNames: 'js/[name].js',
+          // 静态文件位置
+          assetFileNames: (assetsInfo) => {
+            // css单独拿出来
+            const cssPath = ['css', 'ttf', 'woff'];
+            const folder =
+              cssPath.indexOf(assetsInfo.name?.split('.').pop() || '') > -1
+                ? 'css'
+                : 'assets';
+            if (assetsInfo.name == 'index.css') {
+              return `${folder}/[name].[ext]`;
+            }
+            return `${folder}/[name].[hash].[ext]`;
+          },
+          // 抽离chunk
+          manualChunks: {
+            vue: ['vue', 'vue-router'],
+            vant: ['vant'],
+            'modules-chunks': ['amfe-flexible'],
+          },
+        },
+      },
     },
     css: {
       preprocessorOptions: {
         less: {
           javascriptEnabled: true,
-          additionalData: `@import "${pathResolve('src/styles/index.less')}";`,
+          additionalData: `@use '/src/styles/variables.scss' as *;`,
         },
       },
     },
     server: {
-      host: true,
+      host: '0.0.0.0',
+      port: 3000,
       open: true,
     },
   });

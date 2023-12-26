@@ -1,0 +1,87 @@
+:root {
+  --van-checkbox-checked-icon-color: #0364ff;
+}
+
+// 按钮
+.van-button {
+  &--primary {
+    border-color: $mainBgColor;
+    background: $mainBgColor;
+  }
+
+  &--plain {
+    background: #fff;
+    color: $mainBgColor;
+  }
+}
+
+.van-button__content {
+  overflow: hidden;
+}
+
+// dropdown
+.van-dropdown-menu__bar {
+  height: 70px;
+}
+
+.van-dropdown-menu__bar {
+  box-shadow: none;
+  width: 100%;
+}
+
+.van-dropdown-menu__title {
+  color: $FontlightColor;
+  font-size: 28px;
+
+  &::after {
+    border-color: transparent transparent #c9cdd4 #c9cdd4;
+  }
+}
+
+.van-dropdown-menu__title--active {
+  color: $mainBgColor;
+}
+
+.sel-city {
+  .van-picker__toolbar {
+    display: none;
+  }
+}
+
+@media screen and (min-device-pixel-ratio: 2) {
+  .van-tabs__wrap {
+    border-bottom: none;
+    position: relative;
+  }
+
+  .van-tabs__wrap::after {
+    content: '';
+    position: absolute;
+    background: #e5e6eb;
+    left: 0;
+    right: 0;
+    height: 1px;
+    transform: scaleY(0.5);
+    transform-origin: 0 0;
+  }
+
+  .van-tabs__wrap::after {
+    bottom: 0;
+  }
+}
+
+.van-loading {
+  width: 100%;
+  text-align: center;
+}
+
+.van-radio__icon .van-icon {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #666;
+  line-height: 30px;
+}
+
+.van-radio__icon--checked .van-icon {
+  border-color: var(--van-radio-checked-icon-color);
+}

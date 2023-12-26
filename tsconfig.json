@@ -8,7 +8,7 @@
     // 决定如何处理模块
     "moduleResolution": "node",
     "strict": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,

@@ -590,6 +590,7 @@ pnpm i pinia
 # 安装terser
 pnpm install terser --save-dev
 
+pnpm install @vitejs/plugin-legacy --save-dev
 ```
 
 # 最终项目结构：

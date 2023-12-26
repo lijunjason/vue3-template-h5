@@ -38,6 +38,14 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     sourceType: 'module', // 模块类型，默认为script，我们设置为module
   },
+  // 全局自定义的宏，这样再源文件中使用全局变量就不会报错或者警告
+  globals: {
+    defineProps: 'readonly',
+    defineEmits: 'readonly',
+    defineExpose: 'readonly',
+    withDefaults: 'readonly',
+    PHONE_BAR_SDK: 'readonly',
+  },
   plugins: ['vue', '@typescript-eslint', 'prettier'], // eslint-plugin- 可以省略
   rules: {
     'vue/multi-word-component-names': 'off',

@@ -1,0 +1,58 @@
+@import './reset.css';
+@import './variables';
+@import './vant-reset';
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  color: $mainFontColor;
+  overflow: hidden;
+  padding-bottom: constant(safe-area-inset-bottom); /* 兼容 IOS<11.2 */
+  padding-bottom: env(safe-area-inset-bottom); /* 兼容 IOS>11.2 */
+}
+
+.white-bg {
+  background-color: #fff;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.inline-flex {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+
+  & > .flex1 {
+    flex: 1;
+  }
+}
+
+/* 超出省略显示 */
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.circle {
+  text-align: center;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dis-none {
+  display: none;
+}
+
+.vl-m {
+  vertical-align: middle;
+}

@@ -2,12 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
-    <title>vue3 + vite Template</title>
+    <!-- 开启顶部安全区适配 -->
+    <van-nav-bar safe-area-inset-top />
+    <!-- 开启底部安全区适配 -->
+    <van-number-keyboard safe-area-inset-bottom />
+    <title>Phone Bar Mapp</title>
+    <script src="https://j1.58cdn.com.cn/phone_bar_sdk/sdk.js"></script>
   </head>
   <body>
     <div id="app"></div>
