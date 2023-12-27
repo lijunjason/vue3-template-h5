@@ -1,4 +1,4 @@
-# vue3-template
+# vue3-template-h5
 
 - VSCode、Node16+、
 - VSCode 插件：TypeScript Vue Plugin (Volar)、Vue Language Features
