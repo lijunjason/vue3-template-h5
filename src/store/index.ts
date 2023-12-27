@@ -6,3 +6,4 @@ export default pinia;
 
 export * from './modules/user';
 export * from './modules/menu';
+export * from './modules/keepAlive';
