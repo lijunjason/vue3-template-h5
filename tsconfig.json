@@ -13,6 +13,7 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     // 编译过程中需要引入的库文件的列表
     "lib": ["esnext", "dom", "DOM.Iterable"],
     // 默认所有可见的"@types"包会在编译过程中被包含进来

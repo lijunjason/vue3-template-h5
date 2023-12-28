@@ -8,7 +8,10 @@ import Components from 'unplugin-vue-components/vite';
 import { VantResolver } from 'unplugin-vue-components/resolvers';
 import AutoImport from 'unplugin-auto-import/vite';
 import legacy from '@vitejs/plugin-legacy';
-
+import babel from '@rollup/plugin-babel';
+import simpleHtmlPlugin from 'vite-plugin-simple-html';
+import { visualizer } from 'rollup-plugin-visualizer';
+import vueSetupExtend from 'vite-plugin-vue-setup-extend';
 const pathResolve = (dir: string) => resolve(__dirname, dir);
 // https://vitejs.dev/config/
 export default ({ mode }) => {
@@ -26,6 +29,15 @@ export default ({ mode }) => {
     plugins: [
       vue(),
       eslintPlugin(),
+      vueSetupExtend(),
+      simpleHtmlPlugin({
+        minify: true,
+        inject: {
+          data: {
+            title: env.VITE_APP_TITLE,
+          },
+        },
+      }),
       legacy({
         targets: ['chrome < 60', 'edge < 15', 'Firefox < 59'],
       }),
@@ -49,6 +61,18 @@ export default ({ mode }) => {
           enabled: true,
         },
       }),
+      // 解决低版本chrome报错问题 开发环境如果需要debug ，则注释掉 babel 配置
+      babel({
+        babelHelpers: 'bundled',
+        plugins: ['@babel/plugin-transform-optional-chaining'],
+        include: [/\.vue$/, /\.ts$/],
+        extensions: ['.vue', '.ts'],
+      }),
+      visualizer({
+        emitFile: false,
+        filename: 'visualizer.html', //分析图生成的文件名
+        open: true, //如果存在本地服务端口，将在打包后自动展示
+      }),
     ],
     build: {
       outDir: 'dist', // 指定输出路径
@@ -69,26 +93,22 @@ export default ({ mode }) => {
           index: pathResolve('index.html'),
         },
         output: {
-          chunkFileNames: 'js/[name]-[hash].js',
+          // 入口文件 TODO:项目原因不加hash
           entryFileNames: 'js/[name].js',
+          // chunk文件 一般指js
+          chunkFileNames: 'js/[name].[hash].js',
           // 静态文件位置
-          assetFileNames: (assetsInfo) => {
-            // css单独拿出来
-            const cssPath = ['css', 'ttf', 'woff'];
-            const folder =
-              cssPath.indexOf(assetsInfo.name?.split('.').pop() || '') > -1
-                ? 'css'
-                : 'assets';
-            if (assetsInfo.name == 'index.css') {
-              return `${folder}/[name].[ext]`;
+          assetFileNames: (assetInfo) => {
+            // TODO:项目原因不加hash
+            if (assetInfo.name == 'index.css') {
+              return `[ext]/[name].[ext]`;
             }
-            return `${folder}/[name].[hash].[ext]`;
+            return '[ext]/[name].[hash].[ext]';
           },
           // 抽离chunk
           manualChunks: {
-            vue: ['vue', 'vue-router'],
+            vue: ['vue', 'vue-router', 'pinia'],
             vant: ['vant'],
-            'modules-chunks': ['amfe-flexible'],
           },
         },
       },

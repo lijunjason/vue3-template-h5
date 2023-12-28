@@ -1,18 +1,71 @@
 # vue3-template-h5
 
-- VSCode、Node16+、
+- 基于 Vue3、Pinia、Vite、TypeScript
+- IDE环境：VSCode、Node16+
 - VSCode 插件：TypeScript Vue Plugin (Volar)、Vue Language Features
   (Volar)、Prettier - Code formatter、ESLint、Stylelint
 
-# 包管理工具安装 pnpm
+# 项目初始化&启动
 
-```sh
+```
 npm install pnpm -g
-pnpm config get registry
-pnpm config set registry https://registry.npmmirror.com/
+pnpm i --registry=http://ires.58corp.com/repository/58npm/
+pnpm run dev
+
 ```
 
-# Vite 脚手架初始化项目
+# 接口调试抓包
+
+- whistle 相关
+
+  ```
+  sudo npm i -g whistle
+  w2 start
+  浏览器打开 http://127.0.0.1:8899/#network
+  手机配置代理 [电脑ip]:8899
+  查看请求
+  ```
+
+- 浏览器插件安装 SwitchyOmega
+  https://github.com/FelisCatus/SwitchyOmega/releases/tag/v2.5.20 下载.crx 文件
+  拖拽到浏览器的扩展程序中
+
+# 文件目录
+
+```
+├── .husky
+│   └── commit-msg           # commit 信息校验
+|   └── pre-commit           # eslint 代码检验
+├── .vscode
+│   └── extensions.json       # 指定推荐的扩展插件列表
+|   └── settings.json         # vscode 格式化配置
+├── src
+│   ├── assets               # 本地静态资源
+│   ├── components           # 业务通用组件和基础布局组件
+│   ├── hooks                # 自定义hooks
+│   ├── router               # Vue-Router
+│   ├── store                # Pinia
+│   ├── styles               # 全局样式
+│   ├── utils                # 工具库
+│   ├── views                # 业务页面入口和常用模板
+│   ├── App.vue              # Vue 模板入口
+│   ├── auto-import.d.ts     # 自动导入组件
+│   └── main.ts              # Vue 入口 JS
+│   └── vite-env.d.ts        # 全局公用 TypeScript 类型
+├── public                   # 静态文件
+├── auto-imports.d.ts        # Vue3 组合式API 类型声明文件
+├── components.d.ts          # 组件自注册类型声明文件
+├── vite.config.ts           # Vite 配置文件
+├── tsconfig.json            # TS 配置文件
+├── index.html               # 浏览器渲染入口
+├── README.md                # 简单介绍
+└── package.json             # 项目的依赖
+
+```
+
+# 模版搭建
+
+## Vite 脚手架初始化项目
 
 - https://cn.vitejs.dev/guide/#scaffolding-your-first-vite-project
 
@@ -32,7 +85,7 @@ pnpm i
 pnpm run dev
 ```
 
-# 代码加入 eslint 校验与自动格式化
+## 代码加入 eslint 校验与自动格式化
 
 - 相关依赖安装
 
@@ -74,38 +127,49 @@ pnpm i typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin esl
 # eslint-import-resolver-alias: 让我们可以import的时候使用@别名
 ```
 
-# eslintrc 文件修改
+## eslintrc 文件修改
 
 ```sh
 # eslintrc复制下面代码
+/**
+ * npx eslint --init // 自动生成配置文件并安装下面四个依赖
+ *
+ * npm i eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-vue -D // 手动创建文件
+ *
+ * eslint
+ * @typescript-eslint/parser // ESLint 默认使用的是 Espree 进行语法解析，所以无法对部分 typescript 语法进行解析，需要替换掉默认的解析器
+ * @typescript-eslint/eslint-plugin // 作为 eslint 默认规则的补充，提供了一些额外的适用于 ts 语法的规则
+ * eslint-plugin-vue // 让 eslint 识别 vue 文件
+ *
+ * 配置文件优先级：.eslintrc.js > .eslintrc.yaml > .eslintrc.yml > .eslintrc.json > .eslintrc > package.json。
+ */
+
 module.exports = {
-  // 环境 浏览器，最新es语法，node环境
+  root: true, // 停止向上查找父级目录中的配置文件
   env: {
     browser: true,
     es2021: true,
     node: true,
+    'vue/setup-compiler-macros': true,
   },
-  // 扩展的eslint规范语法，可以被继承的规则；字符串数组：每个配置继承它前面的配置
-  // 分别是 eslint-plugin-vue提供的
-  // eslint-config-airbnb-base 提供的
-  // eslint-config-prettier 提供的
-  // eslint-config- 前缀可以简写
-  // https://eslint.vuejs.org/rules/valid-v-if.html
-  extends: ['plugin:vue/vue3-strongly-recommended', 'airbnb-base', 'prettier'],
-  // ESLint 会对我们的代码进行校验，而 parser 的作用是将我们写的代码转换为 ESTree（AST），ESLint 会对 ESTree 进行校验
-  parser: 'vue-eslint-parser',
-  // 解析器的配置项
+  extends: [
+    'eslint:recommended',
+    'plugin:vue/vue3-essential',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+    // eslint-config-prettier 的缩写
+    'prettier',
+    // 解决使用自动导入api报错
+    './.eslintrc-auto-import.json',
+    // 单独解决使用vue api时报错
+    // 'vue-global-api',
+  ],
+  parser: 'vue-eslint-parser', // 指定要使用的解析器
+  // 给解析器传入一些其他的配置参数
   parserOptions: {
-    // es的版本号，或者年份都可以
-    ecmaVersion: 13,
+    ecmaVersion: 'latest', // 支持的es版本
     parser: '@typescript-eslint/parser',
-    // 源码类型 默认是script， es模块使用module
-    sourceType: 'module',
-    // 额外的语言类型
-    ecmaFeatures: {
-      tsx: true,
-      jsx: true,
-    },
+    sourceType: 'module', // 模块类型，默认为script，我们设置为module
   },
   // 全局自定义的宏，这样再源文件中使用全局变量就不会报错或者警告
   globals: {
@@ -113,28 +177,13 @@ module.exports = {
     defineEmits: 'readonly',
     defineExpose: 'readonly',
     withDefaults: 'readonly',
+    PHONE_BAR_SDK: 'readonly',
   },
-  // 插件
-  // 前缀eslint-plugin- 可以省略
-  // vue 官方提供了一个 ESLint 插件 eslint-plugin-vue，它提供了 parser 和 rules。parser 为 vue-eslint-parser,放在上面的parser字段里， rules放在extends字段里，选择合适的规则
-  plugins: ['vue', '@typescript-eslint'],
-  settings: {
-    // 设置项目内的别名
-    'import/resolver': {
-      alias: {
-        map: [['@', './src']],
-      },
-    },
-    // 允许的扩展名
-    'import/extensions': ['.js', '.jsx', '.ts', '.tsx', '.mjs'],
-  },
-  // 自定义规则，覆盖上面extends继承的第三方库的规则，根据组内成员灵活定义
+  plugins: ['vue', '@typescript-eslint', 'prettier'], // eslint-plugin- 可以省略
   rules: {
-    'import/no-extraneous-dependencies': 0,
-    'no-param-reassign': 0,
-    'vue/multi-word-component-names': 0,
-    'vue/attribute-hyphenation': 0,
-    'vue/v-on-event-hyphenation': 0,
+    'vue/multi-word-component-names': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
 };
 
@@ -144,7 +193,7 @@ module.exports = {
 
 ```
 
-# 修改 vite.config.ts
+## 修改 vite.config.ts
 
 ```sh
 pnpm install vite-plugin-eslint -D  vite的一个插件，让项目可以方便的得到eslint支持,完成eslint配置后,可以快速的将其集成进vite之中,便于在代码不符合eslint规范的第一时间看到提示
@@ -204,6 +253,7 @@ dist-ssr
 *.sw?
 
 components.d.ts
+vite-env.d.ts
 ```
 
 - .prettierrc.cjs
@@ -278,7 +328,7 @@ components.d.ts
 ```sh
 {
   "compilerOptions": {
-  	// 指定es的目标版本
+    // 指定es的目标版本
     "target": "esnext",
     "useDefineForClassFields": true,
     // "isolatedModules": true,
@@ -286,11 +336,12 @@ components.d.ts
     // 决定如何处理模块
     "moduleResolution": "node",
     "strict": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     // 编译过程中需要引入的库文件的列表
     "lib": ["esnext", "dom", "DOM.Iterable"],
     // 默认所有可见的"@types"包会在编译过程中被包含进来
@@ -303,11 +354,12 @@ components.d.ts
       "*.ts": ["*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
 ```
 
-# Husk、lint-staged、commitlint 功能添加
+## Husk、lint-staged、commitlint 功能添加
 
 - husky: 是一个为 git 客户端增加 hook 的工具, 在一些git操作前 自动触发的函数；如
   果我们希望在检测错误的同时，自动修复 eslint 语法错误, 就可以通过后面钩子实现
@@ -395,9 +447,26 @@ pnpm install --save-dev stylelint stylelint-config-standard
 # 根目录建立 .stylelintrc.cjs
 module.exports = {
   extends: [
-    "stylelint-config-standard"
+    'stylelint-config-standard-scss',
+    'stylelint-config-recommended-vue/scss',
   ],
-}
+  overrides: [
+    {
+      files: ['*.scss', '**/*.scss'],
+      customSyntax: 'postcss-scss',
+      extends: ['stylelint-config-recommended-scss'],
+    },
+  ],
+  rules: {
+    'selector-class-pattern': null,
+    'no-duplicate-selectors': null,
+    'no-duplicate-selectors': null,
+    'no-duplicate-selectors': null,
+    'scss/dollar-variable-pattern': null,
+    'media-feature-name-no-unknown': null,
+  },
+};
+
 # 执行
 npx stylelint "**/*.css"
 
@@ -463,15 +532,194 @@ module.exports = {
 }
 ```
 
-# 环境变量和模式
+## 环境变量和模式
 
 ```sh
+# 创建.env .env.dev .env.prod
+- .env
+# 加载公共配置 页面标题
+VITE_APP_TITLE = 'Vue3 Template H5'
+- .env.dev
+# 开发环境
+NODE_ENV = development
+
+VITE_APP_API_BASE_URL = /api-dev
+
+# 是否在打包时生成 sourcemap
+VITE_BUILD_SOURCEMAP = true
+# 是否在打包时删除 console 代码
+VITE_BUILD_DROP_CONSOLE = false
+# 是否开启调试工具 vconsole
+VITE_BUILD_VCONSOLE = true
+- .env.prod
+# 生产环境
+NODE_ENV = production
+
+VITE_APP_API_BASE_URL = /api-pro
+
+# 是否在打包时生成 sourcemap
+VITE_BUILD_SOURCEMAP = false
+# 是否在打包时删除 console 代码
+VITE_BUILD_DROP_CONSOLE = true
+# 是否开启调试工具 vconsole
+VITE_BUILD_VCONSOLE = false
 # 在package.json文件里面 写上对应的脚本
-"build:pre": "vue-tsc --noEmit && vite build --mode staging",
-"build:pro": "vue-tsc --noEmit && vite build --mode production",
+"dev": "vite --mode dev",
+"build": "vue-tsc --noEmit && vite build --mode prod",
+# src/vite-env.d.ts添加
+interface ImportMetaEnv {
+  readonly VITE_APP_TITLE: string;
+  readonly VITE_APP_API_BASE_URL: string;
+  readonly VITE_BUILD_SOURCEMAP: string;
+  readonly VITE_BUILD_DROP_CONSOLE: string;
+  // 更多环境变量...
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+# tsconfig.node.json 添加
+{
+  // 只有同时加入 "src/vite-env.d.ts" 才能使vite.config.ts中能使用src/vite-env.d.ts中的全局类型
+  "include": ["vite.config.ts", "src/vite-env.d.ts"]
+}
+
+
+# index.html 中通过vite-plugin-simple-html加载
+pnpm i vite-plugin-simple-html -D
+# vite.config.ts
+import { defineConfig, loadEnv } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { resolve } from 'path';
+import eslintPlugin from 'vite-plugin-eslint';
+import StylelintPlugin from 'vite-plugin-stylelint';
+import { viteVConsole } from 'vite-plugin-vconsole';
+import Components from 'unplugin-vue-components/vite';
+import { VantResolver } from 'unplugin-vue-components/resolvers';
+import AutoImport from 'unplugin-auto-import/vite';
+import legacy from '@vitejs/plugin-legacy';
+import babel from '@rollup/plugin-babel';
+import simpleHtmlPlugin from 'vite-plugin-simple-html';
+
+const pathResolve = (dir: string) => resolve(__dirname, dir);
+// https://vitejs.dev/config/
+export default ({ mode }) => {
+  const env: Partial<ImportMetaEnv> = loadEnv(mode, process.cwd());
+  return defineConfig({
+    define: {
+      'process.env': env,
+    },
+    resolve: {
+      alias: {
+        '@': pathResolve('src'),
+        '@assets': pathResolve('src/assets'),
+      },
+    },
+    plugins: [
+      vue(),
+      eslintPlugin(),
+      simpleHtmlPlugin({
+        minify: true,
+        inject: {
+          data: {
+            title: env.VITE_APP_TITLE,
+          },
+        },
+      }),
+      legacy({
+        targets: ['chrome < 60', 'edge < 15', 'Firefox < 59'],
+      }),
+      StylelintPlugin({ fix: true }),
+      viteVConsole({
+        entry: pathResolve('src/main.ts'),
+        localEnabled: true,
+        enabled: env.VITE_BUILD_VCONSOLE === 'true',
+        config: {
+          maxLogNumber: 1000,
+          theme: 'dark',
+        },
+      }),
+      Components({
+        resolvers: [VantResolver()],
+      }),
+      AutoImport({
+        imports: ['vue', 'vue-router'],
+        dts: 'src/auto-import.d.ts',
+        eslintrc: {
+          enabled: true,
+        },
+      }),
+
+      // 开发环境如果需要debug ，则注释掉 babel 配置
+      babel({
+        babelHelpers: 'bundled',
+        plugins: ['@babel/plugin-transform-optional-chaining'],
+        include: [/\.vue$/, /\.ts$/],
+        extensions: ['.vue', '.ts'],
+      }),
+    ],
+    build: {
+      outDir: 'dist', // 指定输出路径
+      sourcemap: env.VITE_BUILD_SOURCEMAP === 'true',
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          keep_infinity: true, // 防止 Infinity 被压缩成 1/0，这可能会导致 Chrome 上的性能问题
+          drop_console: env.VITE_BUILD_DROP_CONSOLE === 'true', // 去除 console
+          drop_debugger: true, // 去除 debugger
+        },
+      },
+      cssCodeSplit: true, // 启用 CSS 代码拆分
+      emptyOutDir: true, // 构建时清空该目录
+      chunkSizeWarningLimit: 500, // chunk 大小警告的限制
+      rollupOptions: {
+        input: {
+          index: pathResolve('index.html'),
+        },
+        output: {
+          chunkFileNames: 'js/[name]-[hash].js',
+          entryFileNames: 'js/[name].js',
+          // 静态文件位置
+          assetFileNames: (assetsInfo) => {
+            // css单独拿出来
+            const cssPath = ['css', 'ttf', 'woff'];
+            const folder =
+              cssPath.indexOf(assetsInfo.name?.split('.').pop() || '') > -1
+                ? 'css'
+                : 'assets';
+            if (assetsInfo.name == 'index.css') {
+              return `${folder}/[name].[ext]`;
+            }
+            return `${folder}/[name].[hash].[ext]`;
+          },
+          // 抽离chunk
+          manualChunks: {
+            vue: ['vue', 'vue-router'],
+            vant: ['vant'],
+            'modules-chunks': ['amfe-flexible'],
+          },
+        },
+      },
+    },
+    css: {
+      preprocessorOptions: {
+        less: {
+          javascriptEnabled: true,
+          additionalData: `@use '/src/styles/variables.scss' as *;`,
+        },
+      },
+    },
+    server: {
+      host: '0.0.0.0',
+      port: 3000,
+      open: true,
+    },
+  });
+};
+
 ```
 
-# 调试功能与配置文件
+## 调试功能与配置文件
 
 ```sh
 # .vscode文件里面 .launch.json文件 settings.json
@@ -515,7 +763,7 @@ plugin: [
 ]
 ```
 
-# vant4 移动端适配 自动导入 vue-router4 pinia
+## vant4 移动端适配 自动导入 vue-router4 pinia
 
 ```sh
 # vant 安装
@@ -593,28 +841,56 @@ pnpm install terser --save-dev
 pnpm install @vitejs/plugin-legacy --save-dev
 ```
 
-# 最终项目结构：
+## 关于可选链(Optional chaining)(?.)的使用问题
+
+```sh
+pnpm i @rollup/plugin-babel -D
+pnpm i @babel/plugin-transform-optional-chaining -D
+
+# vite.config.ts配置
+# 在 serve 环境时，如果需要解决低版本chrome可选链报错问题，就打开上面的 babel 配置；如果需要 debug ，则注释掉 babel 配置
+# build 时 vite 会对文件进行转译以支持低版本浏览器，不影响
+import babel from '@rollup/plugin-babel';
+
+export default defineConfig({
+  plugins: [
+    babel({
+      babelHelpers: 'bundled',
+      plugins: [ '@babel/plugin-transform-optional-chaining' ]
+      include: include: [/\.vue$/, /\.ts$/],
+      extensions: ['.vue', '.ts'],
+    })
+  ]
+})
 
 ```
-.
-├── .gitignore
-├── .vscode
-│   └── extensions.json
-├── README.md
-├── index.html
-├── package.json
-├── public
-│   └── vite.svg
-├── src
-│   ├── App.vue
-│   ├── assets
-│   │   └── vue.svg
-│   ├── components
-│   │   └── HelloWorld.vue
-│   ├── main.ts
-│   ├── style.css
-│   └── vite-env.d.ts
-├── tsconfig.json
-├── tsconfig.node.json
-└── vite.config.ts
+
+## 打包build 视图分析依赖文件
+
+```sh
+pnpm i rollup-plugin-visualizer -D
+
+# vite.config.ts配置
+import { visualizer } from 'rollup-plugin-visualizer';
+export default defineConfig({
+  plugins: [vue(), visualizer({
+    emitFile: false,
+    filename: "visualizer.html", //分析图生成的文件名
+    open: true //如果存在本地服务端口，将在打包后自动展示
+  })],
+})
+```
+
+## setup语法糖name增强
+
+```sh
+pnpm i vite-plugin-vue-setup-extend -D
+
+# vite.config.ts配置
+import vueSetupExtend from 'vite-plugin-vue-setup-extend'
+export default  ({ mode }) => defineConfig({
+  plugins: [
+    vueSetupExtend()
+  ]
+}
 ```
